@@ -1,29 +1,18 @@
-
 image: atlassian/default-image:3
 
 pipelines:
   branches:
-      main:
-        - step:
-            name: Upload to server
-            script:
-              - pipe: atlassian/ssh-run:0.4.0
-                variables:
-                  SSH_USER: $SSH_USER
-                  SERVER: $SSH_SERVER
-                  COMMAND: >
-                    cd ~/dev/monday &&
-                    git fetch &&
-                    git checkout main &&
-                    git pull &&
-                    ./git-get-changes.sh > changes.txt
-        - step:
-            name: Docker-compose build up
-            script: 
-              - pipe: atlassian/ssh-run:0.4.0
-                variables:
-                  SSH_USER: $SSH_USER
-                  SERVER: $SSH_SERVER
-                  COMMAND: >
-                      cd ~/dev/monday/monday &&
-                      docker-compose up --build -d
+    dev:
+    - step:
+        name: "Git fetch and pull dev branch"
+        script:
+          - pipe: atlassian/ssh-run:0.4.0
+            variables:
+              SSH_USER: 'root'
+              SERVER: '82.148.16.91'
+              COMMAND: >
+                cd ~/devops-test
+                git fetch &&
+                git checkout dev &&
+                git pull &&
+                ./git-changed.sh
