@@ -5,13 +5,15 @@ pipelines:
     dev:
     - step:
         name: "Git pull, docker-compose"
-        deployment: $BITBUCKET_DEPLOYMENT_ENVIRONMENT
+        deployment: staging
         script:
           - pipe: atlassian/ssh-run:0.4.0
             variables:
               SSH_USER: $SSH_USER
               SERVER: $SSH_SERVER
               COMMAND: >
+                echo $BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
+                echo $BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
                 cd $DIR &&
                 git fetch &&
                 git checkout dev &&
