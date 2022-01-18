@@ -11,7 +11,7 @@ pipelines:
               SSH_USER: 'root'
               SERVER: '82.148.16.91'
               COMMAND: >
-                cd ~/devops-test
+                cd ~/devops-test &&
                 git fetch &&
                 git checkout dev &&
                 git pull &&
