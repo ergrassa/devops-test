@@ -1,8 +1,6 @@
-# Branch
-dev
-# Commit ID
-fd492d1ca16
-# Changed files
+9d10c48
+pipe
 
+HEAD -> dev, origin/dev
 
----
+bitbucket-pipelines.yml
