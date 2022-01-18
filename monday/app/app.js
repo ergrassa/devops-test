@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
       if (isNaN(data) === false) {
         output = parseFloat(data)+Math.random()-0.5
       } else {
-        output = Math.random()-0.5
+        output = 11+Math.random()-0.5
       }
       fs.writeFileSync(file, output)
     }
