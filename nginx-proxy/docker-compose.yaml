@@ -1,0 +1,27 @@
+version: "3.5"
+services:
+    ngp:
+      image: nginxproxy/nginx-proxy
+      ports:
+        - 80:80
+#        - 8080:8080
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+        - ../html:/var/www/html
+        - ../conf:/etc/nginx/conf.d
+      networks:
+        proxynet:
+          aliases:
+            - nginxproxy
+            - nginx
+            - proxy
+networks:
+  proxynet:
+    name: proxynet
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24

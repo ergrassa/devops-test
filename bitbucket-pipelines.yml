@@ -1,0 +1,29 @@
+
+image: atlassian/default-image:3
+
+pipelines:
+  branches:
+      main:
+        - step:
+            name: Upload to server
+            script:
+              - pipe: atlassian/ssh-run:0.4.0
+                variables:
+                  SSH_USER: $SSH_USER
+                  SERVER: $SSH_SERVER
+                  COMMAND: >
+                    cd ~/dev/monday &&
+                    git fetch &&
+                    git checkout main &&
+                    git pull &&
+                    ./git-get-changes.sh > changes.txt
+        - step:
+            name: Docker-compose build up
+            script: 
+              - pipe: atlassian/ssh-run:0.4.0
+                variables:
+                  SSH_USER: $SSH_USER
+                  SERVER: $SSH_SERVER
+                  COMMAND: >
+                      cd ~/dev/monday/monday &&
+                      docker-compose up --build -d

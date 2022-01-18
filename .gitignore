@@ -48,3 +48,5 @@ Thumbs.db
 *.mov
 *.wmv
 
+conf/*
+monday/zbx_env/*

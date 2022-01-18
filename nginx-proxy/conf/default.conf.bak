@@ -1,0 +1,13 @@
+# localhost
+upstream localhost {
+        ## Can be connected with "master_default" network
+        # master_app_1
+        server 172.19.0.2:3000;
+}
+server {
+        server_name _;
+        listen 80 ;
+        location / {
+                proxy_pass http://localhost;
+        }
+}
