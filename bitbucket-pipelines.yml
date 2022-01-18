@@ -15,6 +15,6 @@ pipelines:
                 cd $DIR &&
                 git fetch &&
                 git checkout dev &&
-                git pull
+                git pull &&
                 cd $DIR/monday &&
                 docker-compose up --build -d                
