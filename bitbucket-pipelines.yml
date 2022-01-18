@@ -14,5 +14,4 @@ pipelines:
                 cd ~/devops-test &&
                 git fetch &&
                 git checkout dev &&
-                git pull &&
-                ./git-changes.sh
+                git pull
