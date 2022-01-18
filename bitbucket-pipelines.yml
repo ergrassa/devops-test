@@ -15,4 +15,4 @@ pipelines:
                 git fetch &&
                 git checkout dev &&
                 git pull &&
-                ./git-changed.sh
+                ./git-changes.sh
