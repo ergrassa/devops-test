@@ -14,13 +14,16 @@ pipelines:
               COMMAND: >
                 echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
-                echo "branch: "BITBUCKET_BRANCH &&
                 cd $DIR &&
                 git fetch &&
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker-compose up --build -d
+                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
+                docker build ./app -t $IMAGE_NAME:dev &&
+                docker push $IMAGE_NAME:dev &&
+                docker logout &&
+                docker-compose up -d
     master:
     - step:
         name: "Git pull, docker-compose on MASTER"
@@ -33,10 +36,13 @@ pipelines:
               COMMAND: >
                 echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
-                echo "branch: "BITBUCKET_BRANCH &&
                 cd $DIR &&
                 git fetch &&
-                git checkout master &&
+                git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker-compose up --build -d
+                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
+                docker build ./app -t $IMAGE_NAME:master &&
+                docker push $IMAGE_NAME:master &&
+                docker logout &&
+                docker-compose up -d
