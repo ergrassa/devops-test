@@ -19,7 +19,11 @@ pipelines:
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker-compose up --build -d
+                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+                docker build ./app -t $IMAGENAME:dev &&
+                docker push $IMAGENAME:dev &&
+                docker logout &&
+                docker-compose up -d
     master:
     - step:
         name: "Git pull, docker-compose on MASTER"
@@ -37,4 +41,8 @@ pipelines:
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker-compose up --build -d
+                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+                docker build ./app -t $IMAGENAME:dev &&
+                docker push $IMAGENAME:dev &&
+                docker logout &&
+                docker-compose up -d
