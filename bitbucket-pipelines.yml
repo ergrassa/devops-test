@@ -4,7 +4,7 @@ pipelines:
   branches:
     dev:
     - step:
-        name: "Git pull, docker-compose"
+        name: "Git pull, docker-compose on DEV"
         deployment: staging
         script:
           - pipe: atlassian/ssh-run:0.4.0
@@ -22,7 +22,7 @@ pipelines:
                 docker-compose up --build -d
     master:
     - step:
-        name: "Git pull, docker-compose"
+        name: "Git pull, docker-compose on MASTER"
         deployment: production
         script:
           - pipe: atlassian/ssh-run:0.4.0
