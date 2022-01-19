@@ -36,7 +36,7 @@ pipelines:
                 echo "branch: "BITBUCKET_BRANCH &&
                 cd $DIR &&
                 git fetch &&
-                git checkout main &&
+                git checkout master &&
                 git pull &&
                 cd $DIR/monday &&
                 docker-compose up --build -d
