@@ -7,7 +7,7 @@ services:
      - 3000:3000
 #    image: ergrassa/monday
     environment:
-     - VIRTUAL_HOST=app-devops-test.center-game.com
+     - VIRTUAL_HOST=app
      - VIRTUAL_PORT=3000
     volumes:
       - ./data:/var/www/html/data:rw
@@ -79,7 +79,7 @@ services:
      - "8080:8080"
      - "443:8443"
     environment:
-      - VIRTUAL_HOST=zabbix-devops-test.center-game.com
+      - VIRTUAL_HOST=zabbix-web-nginx-mysql
       - VIRTUAL_PORT=8080
     volumes:
      - /etc/localtime:/etc/localtime:ro
