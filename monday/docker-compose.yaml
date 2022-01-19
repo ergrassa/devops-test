@@ -57,7 +57,7 @@ services:
         - zabbix-server-alpine-mysql
         - zabbix-server-mysql-alpine
      proxynet:
-       ipv4_address: 172.16.238.3
+ #      ipv4_address: 172.16.238.3
   #  devices:
   #   - "/dev/ttyUSB0:/dev/ttyUSB0"
     stop_grace_period: 30s
@@ -111,7 +111,7 @@ services:
        - zabbix-web-nginx-alpine-mysql
        - zabbix-web-nginx-mysql-alpine
      proxynet:
-      ipv4_address: 172.16.238.4
+   #   ipv4_address: 172.16.238.4
     stop_grace_period: 10s
     sysctls:
      - net.core.somaxconn=65535
