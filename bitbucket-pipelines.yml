@@ -5,7 +5,7 @@ pipelines:
     dev:
     - step:
         name: "Git pull, docker-compose"
-        deployment: $BITBUCKET_DEPLOYMENT_ENVIRONMENT
+        deployment: staging
         script:
           - pipe: atlassian/ssh-run:0.4.0
             variables:
@@ -19,4 +19,4 @@ pipelines:
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker-compose up --build -d                
+                docker-compose up --build -d
