@@ -19,7 +19,7 @@ pipelines:
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
                 docker build ./app -t $IMAGE_NAME:dev &&
                 docker push $IMAGENAME:dev &&
                 docker logout &&
