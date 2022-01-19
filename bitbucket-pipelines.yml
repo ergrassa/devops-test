@@ -20,3 +20,21 @@ pipelines:
                 git pull &&
                 cd $DIR/monday &&
                 docker-compose up --build -d
+    master:
+    - step:
+        name: "Git pull, docker-compose"
+        deployment: production
+        script:
+          - pipe: atlassian/ssh-run:0.4.0
+            variables:
+              SSH_USER: $SSH_USER
+              SERVER: $SSH_SERVER
+              COMMAND: >
+                echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
+                echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
+                cd $DIR &&
+                git fetch &&
+                git checkout dev &&
+                git pull &&
+                cd $DIR/monday &&
+                docker-compose up --build -d
