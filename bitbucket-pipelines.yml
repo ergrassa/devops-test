@@ -38,11 +38,11 @@ pipelines:
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
                 cd $DIR &&
                 git fetch &&
-                git checkout dev &&
+                git checkout master &&
                 git pull &&
                 cd $DIR/monday &&
                 docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
-                docker build ./app -t $IMAGE_NAME:dev &&
-                docker push $IMAGE_NAME:dev &&
+                docker build ./app -t $IMAGE_NAME:master &&
+                docker push $IMAGE_NAME:master &&
                 docker logout &&
                 docker-compose up -d
