@@ -5,8 +5,16 @@ pipelines:
   branches:
     dev:
     - step:
-        name: "Git pull, docker-compose on staging"
-        deployment: staging
+        name: "build step"
+        services:
+          - docker
+        script:
+          - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+          - docker build -t $IMAGE_NAME:staging ./monday/app/
+          - docker push $IMAGE_NAME:staging
+    - step:
+        name: "Git pull on staging"
+        deployment: production
         script:
           - pipe: atlassian/ssh-run:0.4.0
             variables:
@@ -20,11 +28,7 @@ pipelines:
                 git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
-                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
-                docker build ./app -t $IMAGE_NAME:dev &&
-                docker push $IMAGE_NAME:dev &&
-                docker logout &&
-                docker-compose up -d
+                docker-compose -f docker-compose.staging.yaml up -d
     master:
     - step:
         name: "build step"
