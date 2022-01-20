@@ -14,7 +14,7 @@ pipelines:
           - docker push $IMAGE_NAME:staging
     - step:
         name: "Git pull on staging"
-        deployment: production
+        deployment: staging
         script:
           - pipe: atlassian/ssh-run:0.4.0
             variables:
