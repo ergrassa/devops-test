@@ -1,14 +1,14 @@
 version: '3.5'
 services:
   app:
-#    build: app/
+    #build: app/
     command: node ./app.js
     ports:
      - 3000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:dev
+    image: ergrassa/devops-test-app:staging
     environment:
-     - VIRTUAL_HOST=app-devops-test.center-game.com
+     - VIRTUAL_HOST=staging-app-devops-test.center-game.com
      - VIRTUAL_PORT=3000
     volumes:
       - ./data:/var/www/html/data:rw
@@ -58,7 +58,7 @@ services:
         - zabbix-server-alpine-mysql
         - zabbix-server-mysql-alpine
      proxynet:
-       ipv4_address: 172.16.238.3
+ #      ipv4_address: 172.16.238.3
   #  devices:
   #   - "/dev/ttyUSB0:/dev/ttyUSB0"
     stop_grace_period: 30s
@@ -80,7 +80,7 @@ services:
      - "8080:8080"
      - "443:8443"
     environment:
-      - VIRTUAL_HOST=zabbix-devops-test.center-game.com
+      - VIRTUAL_HOST=staging-zabbix-devops-test.center-game.com
       - VIRTUAL_PORT=8080
     volumes:
      - /etc/localtime:/etc/localtime:ro
@@ -112,7 +112,7 @@ services:
        - zabbix-web-nginx-alpine-mysql
        - zabbix-web-nginx-mysql-alpine
      proxynet:
-      ipv4_address: 172.16.238.4
+   #   ipv4_address: 172.16.238.4
     stop_grace_period: 10s
     sysctls:
      - net.core.somaxconn=65535
