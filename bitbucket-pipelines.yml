@@ -24,8 +24,8 @@ pipelines:
                 echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
                 cd $DIR &&
+                git checkout dev &&                
                 git fetch &&
-                git checkout dev &&
                 git pull &&
                 cd $DIR/monday &&
                 docker-compose -f docker-compose.staging.yaml up -d
@@ -50,8 +50,8 @@ pipelines:
                 echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
                 cd $DIR &&
+                git checkout master &&                
                 git fetch &&
-                git checkout master &&
                 git pull &&
                 cd $DIR/monday &&
                 docker-compose -f docker-compose.production.yaml up -d
