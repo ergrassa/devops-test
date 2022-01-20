@@ -31,6 +31,7 @@ jobs:
       with:
         host: ${{ secrets.STAGING_HOST }}
         username: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_KEY }}
         script: |
           cd /root/devops-test
           git checkout dev            
