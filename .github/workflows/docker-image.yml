@@ -22,6 +22,6 @@ jobs:
       with:
         push: true
         tags: ergrassa/devops-test-app:staging
-        context: ./monday/app/
+        dockerfile: ./monday/app/Dockerfile
     #  run: docker build ./monday/app/ --file Dockerfile --tag my-image-name:$(date +%s)
     # run: docker build -t ergrassa/devops-test-app:staging ./monday/app/
