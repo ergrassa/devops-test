@@ -9,14 +9,14 @@ app.get('/', (req, res) => {
     if (data === undefined) {
       const buffer = fs.readFileSync(file);
       output = parseFloat(buffer)+Math.random()-0.5
-      fs.writeFileSync(file, output)
+      fs.writeFileSync(file, output.toString())
     } else {
       if (isNaN(data) === false) {
         output = parseFloat(data)+Math.random()-0.5
       } else {
         output = 7+Math.random()-0.5
       }
-      fs.writeFileSync(file, output)
+      fs.writeFileSync(file, output.toString())
     }
   res.send("value="+output+";")
 })
