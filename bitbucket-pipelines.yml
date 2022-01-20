@@ -26,6 +26,12 @@ pipelines:
                 docker-compose up -d
     master:
     - step:
+        name: "build step"
+        script:
+          - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+          - docker build ./ -t $IMAGE_NAME:production
+          - docker push $IMAGE_NAME:production
+    - step:
         name: "Git pull, docker-compose on MASTER"
         deployment: production
         script:
@@ -41,8 +47,4 @@ pipelines:
                 git checkout master &&
                 git pull &&
                 cd $DIR/monday &&
-                docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD &&
-                docker build ./app -t $IMAGE_NAME:master &&
-                docker push $IMAGE_NAME:master &&
-                docker logout &&
-                docker-compose up -d
+                docker-compose -f docker-compose.production.yaml up -d

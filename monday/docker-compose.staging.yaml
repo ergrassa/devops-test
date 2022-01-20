@@ -6,9 +6,9 @@ services:
     ports:
      - 3000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:master
+    image: ergrassa/devops-test-app:staging
     environment:
-     - VIRTUAL_HOST=app.local
+     - VIRTUAL_HOST=app-devops-test.center-game.com
      - VIRTUAL_PORT=3000
     volumes:
       - ./data:/var/www/html/data:rw
@@ -80,7 +80,7 @@ services:
      - "8080:8080"
      - "443:8443"
     environment:
-      - VIRTUAL_HOST=zabbix.local
+      - VIRTUAL_HOST=zabbix-devops-test.center-game.com
       - VIRTUAL_PORT=8080
     volumes:
      - /etc/localtime:/etc/localtime:ro
