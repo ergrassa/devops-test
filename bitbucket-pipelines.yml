@@ -32,7 +32,7 @@ pipelines:
           - docker
         script:
           - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-          - docker build -t $IMAGE_NAME:production ./app/
+          - docker build -t $IMAGE_NAME:production ./monday/app/
           - docker push $IMAGE_NAME:production
     - step:
         name: "Git pull on production"
@@ -45,9 +45,8 @@ pipelines:
               COMMAND: >
                 echo "env: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT &&
                 echo "env uuid: "$BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID &&
-                cd $DIR &&
                 git fetch &&
                 git checkout master &&
                 git pull &&
-                cd $DIR/monday &&
+                cd ./monday &&
                 docker-compose -f docker-compose.production.yaml up -d
