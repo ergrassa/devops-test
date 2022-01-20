@@ -5,7 +5,7 @@ pipelines:
   branches:
     dev:
     - step:
-        name: "Git pull, docker-compose on DEV"
+        name: "Git pull, docker-compose on staging"
         deployment: staging
         script:
           - pipe: atlassian/ssh-run:0.4.0
@@ -32,10 +32,10 @@ pipelines:
           - docker
         script:
           - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-          - docker build ./ -t $IMAGE_NAME:production
+          - docker build -t $IMAGE_NAME:production .
           - docker push $IMAGE_NAME:production
     - step:
-        name: "Git pull, docker-compose on MASTER"
+        name: "Git pull on production"
         deployment: production
         script:
           - pipe: atlassian/ssh-run:0.4.0
