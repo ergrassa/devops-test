@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build and Update
 
 on:
   push:
@@ -25,3 +25,16 @@ jobs:
         file: ./monday/app/Dockerfile
     #  run: docker build ./monday/app/ --file Dockerfile --tag my-image-name:$(date +%s)
     # run: docker build -t ergrassa/devops-test-app:staging ./monday/app/
+    -
+      name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        ssh-host: ${{ secrets.STAGING_HOST }}
+        ssh-user: ${{ secrets.STAGING_USERNAME }}
+        script: |
+          cd /root/devops-test
+          git checkout dev            
+          git fetch
+          git pull
+          cd /root/devops-test/monday
+          docker-compose -f docker-compose.staging.yaml up -d
