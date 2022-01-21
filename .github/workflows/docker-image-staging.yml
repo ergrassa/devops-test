@@ -10,6 +10,7 @@ env:
   PROJECT_PATH: /root/devops-test/monday
 jobs:
   build:
+    environment: staging
     runs-on: ubuntu-latest
     steps:
     -
@@ -32,7 +33,7 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.STAGING_KEY }}
+        key: ${{ secrets.SSH_KEY }}
         script: |
           cd /root/devops-test
           git checkout dev            
