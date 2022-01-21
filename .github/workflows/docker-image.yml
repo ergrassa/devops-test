@@ -1,4 +1,7 @@
 name: Build and Update
+env:
+  IMAGE_NAME: ergrassa/devops-test
+  PROJECT_PATH: /root/devops-test/monday
 
 on:
   push:
@@ -21,21 +24,20 @@ jobs:
       name: Build and push dockerimage
       with:
         push: true
-        tags: ergrassa/devops-test-app:staging
+        tags: ${{ IMAGE_NAME }}:staging
         file: ./monday/app/Dockerfile
-    #  run: docker build ./monday/app/ --file Dockerfile --tag my-image-name:$(date +%s)
-    # run: docker build -t ergrassa/devops-test-app:staging ./monday/app/
+   
     -
       name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.STAGING_HOST }}
-        username: ${{ secrets.STAGING_USERNAME }}
-        key: ${{ secrets.STAGING_KEY }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
         script: |
           cd /root/devops-test
           git checkout dev            
           git fetch
           git pull
-          cd /root/devops-test/monday
+          cd ${{ PROJECT_PATH }}
           docker-compose -f docker-compose.staging.yaml up -d
