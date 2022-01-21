@@ -27,10 +27,10 @@ jobs:
       uses: docker/build-push-action@v2
       name: Build and push dockerimage
       with:
-        #context: monday/app
+        context: ./monday/app
         push: true
         tags: ${{ env.IMAGE_NAME }}:staging
-        file: monday/app/Dockerfile
+        file: ./monday/app/Dockerfile
    
     -
       name: SSH Remote Commands
