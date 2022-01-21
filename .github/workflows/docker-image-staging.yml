@@ -23,7 +23,7 @@ jobs:
       name: Build and push dockerimage
       with:
         push: true
-        tags: ${{ IMAGE_NAME }}:staging
+        tags: ${{ env.IMAGE_NAME }}:staging
         file: ./monday/app/Dockerfile
    
     -
@@ -38,5 +38,5 @@ jobs:
           git checkout dev            
           git fetch
           git pull
-          cd ${{ PROJECT_PATH }}
+          cd ${{ env.PROJECT_PATH }}
           docker-compose -f docker-compose.staging.yaml up -d
