@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
       }
       fs.writeFileSync(file, output.toString())
     }
-  res.send("PRODvalue="+output+";")
+  res.send("MASTERvalue="+output+";")
 })
 
 app.listen(port, () => {
