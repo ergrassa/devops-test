@@ -31,8 +31,8 @@ jobs:
       name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
         key: ${{ secrets.STAGING_KEY }}
         script: |
           cd /root/devops-test
