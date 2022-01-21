@@ -11,6 +11,10 @@ env:
 jobs:
   build:
     environment: staging
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
     runs-on: ubuntu-latest
     steps:
     -
@@ -31,9 +35,9 @@ jobs:
       name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.STAGING_HOST }}
-        username: ${{ secrets.STAGING_USERNAME }}
-        key: ${{ secrets.STAGING_KEY }}
+        host: ${{ env.SSH_KEY }}
+        username: ${{ env.SSH_USER }}
+        key: ${{ env.SSH_KEY }}
         script: |
           cd /root/devops-test
           git checkout dev            
