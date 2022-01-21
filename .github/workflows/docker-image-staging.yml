@@ -30,7 +30,7 @@ jobs:
         context: ./monday/app/
         push: true
         tags: ${{ env.IMAGE_NAME }}:staging
-        file: ./monday/app/Dockerfile
+#        file: ./monday/app/Dockerfile
    
     -
       name: SSH Remote Commands
