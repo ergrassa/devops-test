@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
       }
       fs.writeFileSync(file, output.toString())
     }
-  res.send("value="+output+";")
+  res.send("DEVvalue="+output+";")
 })
 
 app.listen(port, () => {
