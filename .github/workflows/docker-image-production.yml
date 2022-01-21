@@ -1,4 +1,4 @@
-name: Build and Update
+name: Build and Update Production
 
 on:
   push:
@@ -7,14 +7,15 @@ on:
     branches: [ master ]
 env:
   IMAGE_NAME: ergrassa/devops-test-app
-  PROJECT_PATH: /root/devops-test/monday
+  PROJECT_PATH: /home/coyote/devops-test/monday
 jobs:
   build:
     environment: production
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
+      #SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
     -
@@ -47,10 +48,11 @@ jobs:
       with:
         host: ${{ env.SSH_KEY }}
         username: ${{ env.SSH_USER }}
-        key: ${{ env.SSH_KEY }}
+        #key: ${{ secrets.PROD_KEY }}
+        password: ${{ env.SSH_PASSWORD }}
         script: |
           cd /home/coyote/devops-test
-          git checkout dev            
+          git checkout master          
           git fetch
           git pull
           docker pull ${{ env.IMAGE_NAME }}:production
