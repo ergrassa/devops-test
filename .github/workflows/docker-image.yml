@@ -1,14 +1,13 @@
 name: Build and Update
-env:
-  IMAGE_NAME: ergrassa/devops-test
-  PROJECT_PATH: /root/devops-test/monday
 
 on:
   push:
     branches: [ dev ]
   pull_request:
     branches: [ dev ]
-
+env:
+  IMAGE_NAME: ergrassa/devops-test
+  PROJECT_PATH: /root/devops-test/monday
 jobs:
   build:
     runs-on: ubuntu-latest
