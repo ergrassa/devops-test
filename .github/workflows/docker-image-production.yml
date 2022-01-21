@@ -14,7 +14,8 @@ jobs:
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
+      #SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
     -
@@ -47,7 +48,8 @@ jobs:
       with:
         host: ${{ env.SSH_KEY }}
         username: ${{ env.SSH_USER }}
-        key: ${{ secrets.PROD_KEY }}
+        #key: ${{ secrets.PROD_KEY }}
+        password: ${{ env.SSH_PASSWORD }}
         script: |
           cd /home/coyote/devops-test
           git checkout dev            
