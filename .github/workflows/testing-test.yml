@@ -20,5 +20,6 @@ jobs:
         node-version: '12.x'
     - name: Install and check codestyle
       run: |
+        cd ./monday/app
         npm install
         npm run codestyle
