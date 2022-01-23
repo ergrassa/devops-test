@@ -1,25 +1,23 @@
-name: Test
+name: Lint
 
 on:
   push:
-    branches: [ test ]
+    branches: [ dev ]
   pull_request:
-    branches: [ test ]
-env:
-  IMAGE_NAME: ergrassa/devops-test-app
-  PROJECT_PATH: /root/devops-test/monday
-jobs:
-  checkCodestyle:
-    runs-on: ubuntu-latest
+    branches: [ dev ]
 
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - name: Install and check codestyle
-      run: |
-        cd ./monday/app
-        npm install
-        npm run codestyle
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: npm ci # or yarn install
+      - uses: sibiraj-s/action-eslint@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Optional
+          eslint-args: '--ignore-path=.gitignore --quiet'
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
