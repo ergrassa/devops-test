@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  push:
+    branches: [ test ]
+  pull_request:
+    branches: [ test ]
+env:
+  IMAGE_NAME: ergrassa/devops-test-app
+  PROJECT_PATH: /root/devops-test/monday
+jobs:
+  checkCodestyle:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Install and check codestyle
+      run: |
+        npm install
+        npm run codestyle
