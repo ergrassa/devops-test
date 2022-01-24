@@ -1,4 +1,4 @@
-const fs = require('fs')
+/*const fs = require('fs')
 
 module.exports = function value(file, data) {
     if (data === undefined) {
@@ -14,5 +14,20 @@ module.exports = function value(file, data) {
       fs.writeFileSync(file, output.toString())
     }
 console.log(output)
-return output
+return output */
+}
+
+module.exports = function value(prev, data) {
+  switch (data) {
+    case undefined:
+      output = prev;
+      break;
+    case !isNaN(data):
+      output = parseFloat(data);
+      break;
+    default:
+      output = 0;
+      break;
+  }
+  return output
 }
