@@ -1,33 +1,14 @@
-/*const fs = require('fs')
-
-module.exports = function value(file, data) {
+module.exports = function value(prev, data) {
     if (data === undefined) {
-      const buffer = fs.readFileSync(file);
-      output = parseFloat(buffer)+Math.random()-0.5
-      fs.writeFileSync(file, output.toString())
+      output = parseFloat(prev)
     } else {
       if (isNaN(data) === false) {
-        output = parseFloat(data)+Math.random()-0.5
+//      if (typeof data === 'number') {
+        output = parseFloat(data)
       } else {
-        output = Math.random()-0.5
+        output = parseFloat(0.0)
       }
-      fs.writeFileSync(file, output.toString())
     }
 console.log(output)
-return output */
-}
-
-module.exports = function value(prev, data) {
-  switch (data) {
-    case undefined:
-      output = prev;
-      break;
-    case !isNaN(data):
-      output = parseFloat(data);
-      break;
-    default:
-      output = 0;
-      break;
-  }
-  return output
+return output 
 }
