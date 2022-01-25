@@ -49,10 +49,10 @@ jobs:
         username: ${{ env.SSH_USER }}
         key: ${{ env.SSH_KEY }}
         script: |
-          cd /root/devops-test
+          cd ~/devops-test
           git checkout dev            
           git fetch
           git pull
           docker pull ${{ env.IMAGE_NAME }}:staging
-          cd ${{ env.PROJECT_PATH }}
+          cd ./monday
           docker-compose -f docker-compose.staging.yaml up -d
