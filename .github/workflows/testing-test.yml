@@ -4,6 +4,9 @@ on:
     #branches: [ dev ]
   push:
     branches: [test]
+env:
+  IMAGE_NAME: ergrassa/devops-test-app
+  PROJECT_PATH: /root/devops-test/monday    
 jobs:
   build:
     environment: staging
