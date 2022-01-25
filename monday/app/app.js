@@ -12,7 +12,7 @@ old_value = parseFloat(buffer)
 app.get('/', (req, res) => {
   data = req.query.data
   new_value = value(old_value, parseFloat(data))+Math.random()-0.5
-  res.send("v2value="+new_value+";")
+  res.send("v200value="+new_value+";")
   console.log("data: "+data+"  new: "+new_value+"  old: "+old_value)
   old_value = new_value
 })
