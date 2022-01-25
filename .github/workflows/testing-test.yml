@@ -53,9 +53,9 @@ jobs:
         key: ${{ env.SSH_KEY }}
         script: |
           cd ~/devops-test
-          git checkout dev            
+          git checkout dev          
           git fetch
           git pull
           docker pull ${{ env.IMAGE_NAME }}:review
-          cd ${{ env.PROJECT_PATH }}
+          cd ./monday
           docker-compose -f docker-compose.review.yaml up -d
