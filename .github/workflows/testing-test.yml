@@ -6,7 +6,7 @@ on:
     branches: [test]
 env:
   IMAGE_NAME: ergrassa/devops-test-app
-  PROJECT_PATH: /root/devops-test/monday    
+  PROJECT_PATH: ~/devops-test/monday    
 jobs:
   build:
     environment: staging
@@ -52,7 +52,7 @@ jobs:
         username: ${{ env.SSH_USER }}
         key: ${{ env.SSH_KEY }}
         script: |
-          cd /root/devops-test
+          cd ~/devops-test
           git checkout dev            
           git fetch
           git pull
