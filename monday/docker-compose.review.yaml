@@ -1,6 +1,6 @@
 version: '3.5'
 services:
-  app:
+  app-review:
     #build: app/
     command: node ./app.js
     ports:
