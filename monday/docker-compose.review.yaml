@@ -6,7 +6,7 @@ services:
     ports:
      - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:preview
+    image: ergrassa/devops-test-app:review
     environment:
      - VIRTUAL_HOST=review.badger.local
      - VIRTUAL_PORT=4000
