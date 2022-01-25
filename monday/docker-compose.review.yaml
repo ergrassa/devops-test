@@ -4,12 +4,12 @@ services:
     #build: app/
     command: node ./app.js
     ports:
-     - 3000:3000
+     - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:staging
+    image: ergrassa/devops-test-app:preview
     environment:
      - VIRTUAL_HOST=review.badger.local
-     - VIRTUAL_PORT=3000
+     - VIRTUAL_PORT=4000
     volumes:
       - ./data:/var/www/html/data:rw
     networks:
