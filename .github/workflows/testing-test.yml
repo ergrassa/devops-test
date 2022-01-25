@@ -1,24 +1,49 @@
-name: Lint
-
+name: Start Review App for Pull Request
 on:
-  push:
-    branches: [ none ]
   pull_request:
-    branches: [ none ]
+    branches:
+      - dev
 
 jobs:
-  eslint:
+  build:
+    environment: staging
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 12
-      - run: |
-          cd ./monday/app
-          npm ci # or yarn install
-      - uses: sibiraj-s/action-eslint@v2
-        with:
-          eslint-args: '--ignore-path=.gitignore --quiet'
-          extensions: 'js,jsx,ts,tsx'
-          annotations: true
+    -
+      name: Checkout
+      uses: actions/checkout@v2    
+    - 
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - 
+      uses: docker/build-push-action@v2
+      name: Build and push dockerimage
+      with:
+        context: ./monday/app
+        push: false
+        tags: ${{ env.IMAGE_NAME }}:staging
+        file: ./monday/app/Dockerfile
+   
+    -
+      name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ env.SSH_KEY }}
+        username: ${{ env.SSH_USER }}
+        key: ${{ env.SSH_KEY }}
+        script: |
+          cd /root/devops-test
+          git checkout dev            
+          git fetch
+          git pull
+          docker pull ${{ env.IMAGE_NAME }}:staging
+          cd ${{ env.PROJECT_PATH }}
+          docker-compose -f docker-compose.review.yaml up -d
