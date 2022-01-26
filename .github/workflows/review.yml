@@ -63,6 +63,7 @@ jobs:
         script: |
           echo ${{ steps.extract_branch.outputs.branch_long }}
           echo ${{ steps.extract_branch.outputs.branch }}
+          cd ~/devops-test
           ls
           cd ./monday
           ls
