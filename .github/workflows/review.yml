@@ -1,0 +1,70 @@
+name: Start Review App for Pull Request
+on:
+  pull_request:
+    branches: [ dev ]
+ # push:
+  #  branches: [test]
+env:
+  IMAGE_NAME: ergrassa/devops-test-app
+  PROJECT_PATH: ~/devops-test/monday    
+jobs:
+  build:
+    environment: staging
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v2    
+    - 
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    # -
+    #   name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v1
+    # -
+    #   uses: docker/login-action@v1
+    #   name: Dockerhub login
+    #   with:
+    #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
+    #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}      
+    - 
+      name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    # - 
+    #   uses: docker/build-push-action@v2
+    #   name: Build and push dockerimage
+    #   with:
+    #     context: ./monday/app
+    #     push: true
+    #     tags: ${{ env.IMAGE_NAME }}:review
+    #     file: ./monday/app/Dockerfile
+    - name: SSH test tag extract
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USER }}
+        key: ${{ env.SSH_KEY }}
+        script: |
+          echo ${{ steps.extract_branch.outputs.branch }} > ./branchname
+          echo ${{ steps.extract_branch.outputs.branch }}
+    # -
+    #   name: SSH Remote Commands
+    #   uses: appleboy/ssh-action@v0.1.4
+    #   with:
+    #     host: ${{ env.SSH_HOST }}
+    #     username: ${{ env.SSH_USER }}
+    #     key: ${{ env.SSH_KEY }}
+    #     script: |
+    #       cd ~/devops-test
+    #       git checkout dev          
+    #       git fetch
+    #       git pull
+    #       docker pull ${{ env.IMAGE_NAME }}:review
+    #       cd ./monday
+    #       docker-compose -f docker-compose.review.yaml up -d

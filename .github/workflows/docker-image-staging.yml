@@ -3,8 +3,8 @@ name: Build and Update
 on:
   push:
     branches: [ dev ]
-  pull_request:
-    branches: [ dev ]
+#  pull_request:
+#    branches: [ dev ]
 env:
   IMAGE_NAME: ergrassa/devops-test-app
   PROJECT_PATH: /root/devops-test/monday
