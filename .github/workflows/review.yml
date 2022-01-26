@@ -67,7 +67,7 @@ jobs:
           mkdir -p ${{ steps.extract_branch.outputs.branch }}
           cd ${{ steps.extract_branch.outputs.branch }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
-          docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
+         # docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
 
     # -
     #   name: SSH Remote Commands
