@@ -223,27 +223,6 @@ services:
 #    aliases:
 #     - elasticsearch
 
-networks:
-  proxynet:
-    name: proxynet
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.238.0/24
-  backend:
-    name: backend
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    internal: true
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.239.0/24
-
 #volumes:
 #  snmptraps:
 
