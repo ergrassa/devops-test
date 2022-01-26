@@ -55,4 +55,5 @@ jobs:
           git pull
           docker pull ${{ env.IMAGE_NAME }}:staging
           cd ./monday
+          docker-compose -f docker-compose.staging.yaml down
           docker-compose -f docker-compose.staging.yaml up -d
