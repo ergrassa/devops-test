@@ -52,7 +52,7 @@ jobs:
       with:
         context: ./monday/app
         push: true
-        tags: ${{ env.IMAGE_NAME }}:{{ steps.extract_branch.outputs.branch }}
+        tags: ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
         file: ./monday/app/Dockerfile
 
     - name: SSH test tag extract
@@ -69,7 +69,7 @@ jobs:
           cd ${{ steps.extract_branch.outputs.branch }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
           sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
-          docker pull ${{ env.IMAGE_NAME }}:{{ steps.extract_branch.outputs.branch }}
+          docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
 
     # -
