@@ -34,7 +34,9 @@ jobs:
     - 
       name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: |
+        echo "##[set-output name=branch_long;]$(echo ${GITHUB_REF#refs/heads/})"
+        echo ::set-output name=branch::${GITHUB_REF#refs/*/}
       id: extract_branch
 
     - name: Print Github Variables
@@ -63,7 +65,7 @@ jobs:
         username: ${{ env.SSH_USER }}
         key: ${{ env.SSH_KEY }}
         script: |
-          echo ${{ steps.extract_branch.outputs.branch }} > ./branchname
+          echo ${{ steps.extract_branch.outputs.branch_long }}
           echo ${{ steps.extract_branch.outputs.branch }}
     # -
     #   name: SSH Remote Commands
