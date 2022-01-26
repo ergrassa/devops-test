@@ -63,10 +63,16 @@ jobs:
         script: |
           echo ${{ steps.extract_branch.outputs.branch_long }}
           echo ${{ steps.extract_branch.outputs.branch }}
-          cd ~/devops-test/monday/reivew
-          mkdir -p ${{ steps.extract_branch.outputs.branch }}
-          cd ${{ steps.extract_branch.outputs.branch }}
-          cp ~/devops-test/monday/docker-compose.review.yaml ./
+          ls
+          cd ./monday
+          ls
+          cd ./review
+          ls
+#          cd ~/devops-test/monday/reivew
+#          mkdir -p ${{ steps.extract_branch.outputs.branch }}
+#          cd ${{ steps.extract_branch.outputs.branch }}
+#          cp ~/devops-test/monday/docker-compose.review.yaml ./
+
          # docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
 
     # -
