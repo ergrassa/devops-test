@@ -223,7 +223,12 @@ services:
 #    aliases:
 #     - elasticsearch
 
-#volumes:
+networks:
+  proxynet:
+    name: proxynet
+  backend:
+    name: backend
+
 #  snmptraps:
 
 secrets:
