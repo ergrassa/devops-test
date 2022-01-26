@@ -8,7 +8,7 @@ services:
     # should be the same as in bitbucket-pipelines.yml
     image: ergrassa/devops-test-app:review
     environment:
-     - VIRTUAL_HOST=__branch__
+     - VIRTUAL_HOST=%branch%
      - VIRTUAL_PORT=4000
     volumes:
       - ./data:/var/www/html/data:rw
@@ -16,7 +16,7 @@ services:
       backend:
       proxynet:
         aliases:
-          - app-review-__branch__
+          - app-review-%branch%
 #        ipv4_address: 172.16.238.2
 
 networks:
