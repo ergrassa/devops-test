@@ -3,12 +3,12 @@ services:
   app-review:
     #build: app/
     command: node ./app.js
-#    ports:
-#     - 3000:3000
+    # ports:
+    #  - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
     image: ergrassa/devops-test-app:review
     environment:
-     - VIRTUAL_HOST=review.badger.local
+     - VIRTUAL_HOST=__branch__
      - VIRTUAL_PORT=4000
     volumes:
       - ./data:/var/www/html/data:rw
@@ -16,27 +16,11 @@ services:
       backend:
       proxynet:
         aliases:
-          - app-review
+          - app-review-__branch__
 #        ipv4_address: 172.16.238.2
 
 networks:
   proxynet:
     name: proxynet
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.238.0/24
   backend:
     name: backend
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    internal: true
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.239.0/24
-
