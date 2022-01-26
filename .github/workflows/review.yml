@@ -19,12 +19,12 @@ jobs:
     -
       name: Checkout
       uses: actions/checkout@v2    
-    # - 
-    #   name: Set up QEMU
-    #   uses: docker/setup-qemu-action@v1
-    # -
-    #   name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v1
+    - 
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
     -
       uses: docker/login-action@v1
       name: Dockerhub login
@@ -46,14 +46,15 @@ jobs:
         echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
       id: extract_branch
 
-    # - 
-    #   uses: docker/build-push-action@v2
-    #   name: Build and push dockerimage
-    #   with:
-    #     context: ./monday/app
-    #     push: true
-    #     tags: ${{ env.IMAGE_NAME }}:review
-    #     file: ./monday/app/Dockerfile
+    - 
+      uses: docker/build-push-action@v2
+      name: Build and push dockerimage
+      with:
+        context: ./monday/app
+        push: true
+        tags: ${{ env.IMAGE_NAME }}:{{ steps.extract_branch.outputs.branch }}
+        file: ./monday/app/Dockerfile
+
     - name: SSH test tag extract
       uses: appleboy/ssh-action@v0.1.4
       with:
@@ -68,6 +69,7 @@ jobs:
           cd ${{ steps.extract_branch.outputs.branch }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
           sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
+          docker pull ${{ env.IMAGE_NAME }}:{{ steps.extract_branch.outputs.branch }}
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
 
     # -
