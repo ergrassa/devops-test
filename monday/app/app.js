@@ -2,12 +2,12 @@ const value = require('./value.js')
 const express = require('express')
 const app = express()
 const port = 3000
-const fs = require('fs')
-const file = "../data/lastdata"
-const buffer = fs.readFileSync(file)
+// const fs = require('fs')
+// const file = "../data/lastdata"
+// const buffer = fs.readFileSync(file)
 
-old_value = parseFloat(buffer)
-//old_value = 0.000
+// old_value = parseFloat(buffer)
+old_value = 0.000
 
 app.get('/', (req, res) => {
   data = req.query.data
@@ -33,10 +33,10 @@ function exitHandler(options, exitCode) {
 }
 
 //do something when app is closing
-process.on('exit', exitHandler.bind(null,{write:true}));
+process.on('exit', exitHandler.bind(null,{write:false}));
 
 //catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {write:true, exit:true}));
+process.on('SIGINT', exitHandler.bind(null, {write:false, exit:true}));
 
 // catches "kill pid" (for example: nodemon restart)
 process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
