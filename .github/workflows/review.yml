@@ -70,12 +70,12 @@ jobs:
           mkdir -p ${{ steps.extract_branch.outputs.feature }}
           cd ${{ steps.extract_branch.outputs.feature }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
-          sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
+#          sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
           sed -i 's/_feature_/${{ steps.extract_branch.outputs.feature }}/' ./docker-compose.review.yaml
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
-          docker network create net-${{ steps.extract_branch.outputs.feature }}
-          docker network connect net-${{ steps.extract_branch.outputs.branch }} nginx-proxy-ngp-1
-          docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
+          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge
+          docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
+          docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.feature }} up -d
     # -
     #   name: SSH Remote Commands
     #   uses: appleboy/ssh-action@v0.1.4
