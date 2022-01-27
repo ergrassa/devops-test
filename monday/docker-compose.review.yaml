@@ -20,7 +20,7 @@ services:
 #        ipv4_address: 172.16.238.2
 
 networks:
-  proxynet:
-    name: proxynet
-  backend:
-    name: backend
+  net-_branch_:
+    name: net-_branch_
+    external: true
+
