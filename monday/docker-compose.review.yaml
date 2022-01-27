@@ -3,8 +3,8 @@ services:
   app-review:
     #build: app/
     command: node ./app.js
-    # ports:
-    #  - 4000:3000
+    ports:
+     - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
     image: ergrassa/devops-test-app:_branch_
     environment:
@@ -24,4 +24,3 @@ networks:
     name: proxynet
   backend:
     name: backend
-

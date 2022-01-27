@@ -2,17 +2,17 @@ const value = require('./value.js')
 const express = require('express')
 const app = express()
 const port = 3000
-//const fs = require('fs')
-//const file = "../data/lastdata"
-//const buffer = fs.readFileSync(file)
+// const fs = require('fs')
+// const file = "../data/lastdata"
+// const buffer = fs.readFileSync(file)
 
-//old_value = parseFloat(buffer)
+// old_value = parseFloat(buffer)
 old_value = 0.000
 
 app.get('/', (req, res) => {
   data = req.query.data
   new_value = value(old_value, parseFloat(data))+Math.random()-0.5
-  res.send("v200value="+new_value+";")
+  res.send("DEVvalue="+new_value+";")
   console.log("data: "+data+"  new: "+new_value+"  old: "+old_value)
   old_value = new_value
 })
