@@ -13,8 +13,7 @@ services:
     # volumes:
     #   - ./data:/var/www/html/data:rw
     networks:
-      backend:
-      proxynet:
+      net-_branch_:
         aliases:
           - app-review-_branch_
 #        ipv4_address: 172.16.238.2
