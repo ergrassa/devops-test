@@ -13,13 +13,13 @@ services:
     # volumes:
     #   - ./data:/var/www/html/data:rw
     networks:
-      net-_branch_:
+      net-_feature_:
         aliases:
           - app-review-_feature_
 #        ipv4_address: 172.16.238.2
 
 networks:
-  net-_branch_:
+  net-_feature_:
     name: net-_feature_
     external: true
 
