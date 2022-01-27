@@ -1,9 +1,9 @@
 name: Start Review App for Pull Request
 on:
-  pull_request:
-    branches: [ dev ]
-  # push:
-  #  branches: [ feature ]
+#   pull_request:
+#     branches: [ dev ]
+  push:
+   branches: [ feature ]
 env:
   IMAGE_NAME: ergrassa/devops-test-app
   PROJECT_PATH: ~/devops-test/monday    
@@ -61,8 +61,15 @@ jobs:
         username: ${{ env.SSH_USER }}
         key: ${{ env.SSH_KEY }}
         script: |
-          echo ${{ steps.extract_branch.outputs.branch_long }}
+          echo ${{ steps.extract_branch.outputs.branch_short }}
           echo ${{ steps.extract_branch.outputs.branch }}
+          cd ~/devops-test/monday/review
+          mkdir -p ${{ steps.extract_branch.outputs.branch }}
+          cd ${{ steps.extract_branch.outputs.branch }}
+          cp ~/devops-test/monday/docker-compose.review.yaml ./
+          sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
+          docker pull ***/devops-test-app:${{ steps.extract_branch.outputs.branch }}
+          docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
     # -
     #   name: SSH Remote Commands
     #   uses: appleboy/ssh-action@v0.1.4
