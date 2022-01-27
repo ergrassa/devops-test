@@ -54,7 +54,7 @@ jobs:
       with:
         context: ./monday/app
         push: true
-        tags: ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
+        tags: ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
         file: ./monday/app/Dockerfile
 
     - name: SSH deploy
@@ -64,16 +64,16 @@ jobs:
         username: ${{ env.SSH_USER }}
         key: ${{ env.SSH_KEY }}
         script: |
-          echo ${{ steps.extract_branch.outputs.branch_short }}
+          echo ${{ steps.extract_branch.outputs.feature }}
           echo ${{ steps.extract_branch.outputs.branch }}
           cd ~/devops-test/monday/review
-          mkdir -p ${{ steps.extract_branch.outputs.branch }}
-          cd ${{ steps.extract_branch.outputs.branch }}
+          mkdir -p ${{ steps.extract_branch.outputs.feature }}
+          cd ${{ steps.extract_branch.outputs.feature }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
           sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
           sed -i 's/_feature_/${{ steps.extract_branch.outputs.feature }}/' ./docker-compose.review.yaml
-          docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
-          docker network create net-${{ steps.extract_branch.outputs.branch }}
+          docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
+          docker network create net-${{ steps.extract_branch.outputs.feature }}
           docker network connect net-${{ steps.extract_branch.outputs.branch }} nginx-proxy-ngp-1
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
     # -
