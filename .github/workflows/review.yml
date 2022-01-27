@@ -70,6 +70,8 @@ jobs:
           cp ~/devops-test/monday/docker-compose.review.yaml ./
           sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
+          docker network create net-${{ steps.extract_branch.outputs.branch }}
+          docker network connect net-${{ steps.extract_branch.outputs.branch }} nginx-proxy-ngp-1
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.branch }} up -d
     # -
     #   name: SSH Remote Commands
