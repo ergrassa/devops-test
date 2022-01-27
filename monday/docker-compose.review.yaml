@@ -6,12 +6,12 @@ services:
     # ports:
     #  - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:review
+    image: ergrassa/devops-test-app:%branch%
     environment:
      - VIRTUAL_HOST=%branch%
      - VIRTUAL_PORT=4000
-    volumes:
-      - ./data:/var/www/html/data:rw
+    # volumes:
+    #   - ./data:/var/www/html/data:rw
     networks:
       backend:
       proxynet:
