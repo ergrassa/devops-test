@@ -2,8 +2,8 @@ name: Start Review App for Pull Request
 on:
   pull_request:
     branches: [ dev ]
-  push:
-   branches: [ feature ]
+  # push:
+  #  branches: [ feature ]
 env:
   IMAGE_NAME: ergrassa/devops-test-app
   PROJECT_PATH: ~/devops-test/monday    
@@ -35,8 +35,8 @@ jobs:
       name: Extract branch name
       shell: bash
       run: |
-        echo "##[set-output name=branch_long;]$(echo ${GITHUB_REF#refs/heads/})"
-        echo ::set-output name=branch::${GITHUB_REF#refs/*/}
+        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        echo ::set-output name=branch_short::${GITHUB_REF#refs/*/}
         echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
         echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
         echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
