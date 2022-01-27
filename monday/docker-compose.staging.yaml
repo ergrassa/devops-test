@@ -10,8 +10,8 @@ services:
     environment:
      - VIRTUAL_HOST=staging-app-devops-test.center-game.com
      - VIRTUAL_PORT=3000
-    volumes:
-      - ./data:/var/www/html/data:rw
+#    volumes:
+#      - ./data:/var/www/html/data:rw
     networks:
       backend:
       proxynet:
