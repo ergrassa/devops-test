@@ -7,11 +7,14 @@ const port = 3000
 // const buffer = fs.readFileSync(file)
 
 // old_value = parseFloat(buffer)
+old_value = 0.000
 
 app.get('/', (req, res) => {
-  data = Math.random().toString(20).substr(2, 6);
-  res.send("This is a test output<br />app feature/echo"+data+";");
-  console.log("data: "+data)
+  data = req.query.data
+  new_value = value(old_value, parseFloat(data))+Math.random()-0.5
+  res.send("DEV_value="+new_value+";")
+  console.log("data: "+data+"  new: "+new_value+"  old: "+old_value)
+  old_value = new_value
 })
 
 app.listen(port, () => {
@@ -41,4 +44,3 @@ process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
 
 //catches uncaught exceptions
 process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
-

@@ -57,7 +57,8 @@ jobs:
         tags: ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
         file: ./monday/app/Dockerfile
 
-    - name: SSH deploy
+    - 
+      name: SSH deploy
       uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ env.SSH_HOST }}
@@ -70,7 +71,7 @@ jobs:
           mkdir -p ${{ steps.extract_branch.outputs.feature }}
           cd ${{ steps.extract_branch.outputs.feature }}
           cp ~/devops-test/monday/docker-compose.review.yaml ./
-#          sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
+          # sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
           sed -i 's/_feature_/${{ steps.extract_branch.outputs.feature }}/' ./docker-compose.review.yaml
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
           docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge
