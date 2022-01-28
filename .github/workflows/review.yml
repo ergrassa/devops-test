@@ -37,7 +37,9 @@ jobs:
       shell: bash
       run: |
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/ | sed 's/\//-/'})"
+        echo ${GITHUB_REF#refs/heads/}
+        echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
+        echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
         echo ::set-output name=branch_short::${GITHUB_REF#refs/*/}
         echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
         echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
