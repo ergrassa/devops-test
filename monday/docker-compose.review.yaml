@@ -9,7 +9,7 @@ services:
     image: ergrassa/devops-test-app:_feature_
     environment:
      - VIRTUAL_HOST=_feature_
-     - VIRTUAL_PORT=4000
+#     - VIRTUAL_PORT=4000
     # volumes:
     #   - ./data:/var/www/html/data:rw
     networks:
