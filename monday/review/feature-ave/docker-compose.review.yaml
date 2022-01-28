@@ -5,6 +5,8 @@ services:
     command: node ./app.js
 #    ports:
 #     - 4000:3000
+    expose:
+      - "3000"
     # should be the same as in bitbucket-pipelines.yml
     image: ergrassa/devops-test-app:feature-ave
     environment:
