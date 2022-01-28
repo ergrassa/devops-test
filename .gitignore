@@ -51,3 +51,4 @@ Thumbs.db
 conf/*
 monday/zbx_env/*
 monday/data/lastdata
+monday/review/*
