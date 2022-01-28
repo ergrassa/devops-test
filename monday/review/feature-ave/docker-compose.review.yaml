@@ -3,23 +3,23 @@ services:
   app-review:
     #build: app/
     command: node ./app.js
-#    ports:
-#     - 4000:3000
+    ports:
+     - 4000:3000
     # should be the same as in bitbucket-pipelines.yml
-    image: ergrassa/devops-test-app:_feature_
+    image: ergrassa/devops-test-app:feature-ave
     environment:
-     - VIRTUAL_HOST=_feature_
+     - VIRTUAL_HOST=feature-ave
 #     - VIRTUAL_PORT=4000
     # volumes:
     #   - ./data:/var/www/html/data:rw
     networks:
-      net-_feature_:
+      net-feature-ave:
         aliases:
-          - app-review-_feature_
+          - app-review-feature-ave
 #        ipv4_address: 172.16.238.2
 
 networks:
-  net-_feature_:
-    name: net-_feature_
+  net-feature-ave:
+    name: net-feature-ave
     external: true
 
