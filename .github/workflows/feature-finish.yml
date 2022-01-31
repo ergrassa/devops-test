@@ -5,6 +5,7 @@ on:
     - feature/*
 jobs:
   shut-down-review:
+    environment: staging
     name: Shut-Down-Review
     runs-on: ubuntu-latest
     steps:
