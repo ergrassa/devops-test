@@ -78,7 +78,7 @@ jobs:
           # если нет сетки, то создать и подключить к прокси
           # многострочник, пайп || выполняется, если первая команда завершена с ошибкой
           docker network inspect net-${{ steps.extract_branch.outputs.feature }} || \
-          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge \
+          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge && \
           docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
 
           # поехали!
