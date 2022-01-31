@@ -31,15 +31,7 @@ jobs:
         script: |
           echo ${{ steps.extract_branch.outputs.feature }}
           cd ~/devops-test/monday/review
-          echo REMOVED > ./${{ steps.extract_branch.outputs.feature }}/test
-
-          echo TEST >> ./${{ steps.extract_branch.outputs.feature }}/test
-
-          date
-
-          ls -alh
-
-# docker-compose -f ./${{ steps.extract_branch.outputs.feature }}/docker-compose.review.yaml down --volumes --remove-orphans --rmi all
-# docker network disconnect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
-# docker network rm net-${{ steps.extract_branch.outputs.feature }}
-# echo REMOVED > ./${{ steps.extract_branch.outputs.feature }}/docker-compose.review.yaml
+          docker-compose -f ./${{ steps.extract_branch.outputs.feature }}/docker-compose.review.yaml down --volumes --remove-orphans --rmi all
+          docker network disconnect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
+          docker network rm net-${{ steps.extract_branch.outputs.feature }}
+          rm -r ./${{ steps.extract_branch.outputs.feature }}
