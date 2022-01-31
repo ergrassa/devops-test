@@ -42,16 +42,9 @@ jobs:
         echo ${GITHUB_REF#refs/heads/}
         echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
         echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
-        echo ::set-output name=branch_short::${GITHUB_REF#refs/*/}
-        echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
-        echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
-        echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
-        echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
-        echo "GITHUB_SHA:$GITHUB_SHA"
-        echo "GITHUB_REF:$GITHUB_REF"
-        echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
       id: extract_branch
-
+      # аутпут branch - имя ветки вида feature/name
+      # аутпут feature - имя ветки вида feature-name
     - 
       uses: docker/build-push-action@v2
       name: Build and push dockerimage
@@ -70,29 +63,23 @@ jobs:
         key: ${{ env.SSH_KEY }}
         script: |
           echo ${{ steps.extract_branch.outputs.feature }}
-          echo ${{ steps.extract_branch.outputs.branch }}
+
+          # создать папку
           cd ~/devops-test/monday/review
           mkdir -p ${{ steps.extract_branch.outputs.feature }}
           cd ${{ steps.extract_branch.outputs.feature }}
+          
+          # компоуз из шаблона
           cp ~/devops-test/monday/docker-compose.review.yaml ./
-          # sed -i 's/_branch_/${{ steps.extract_branch.outputs.branch }}/' ./docker-compose.review.yaml
           sed -i 's/_feature_/${{ steps.extract_branch.outputs.feature }}/' ./docker-compose.review.yaml
+
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
-          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge
+          
+          # если нет сетки, то создать и подключить к прокси
+          # многострочник, пайп || выполняется, если первая команда завершена с ошибкой
+          docker network inspect net-${{ steps.extract_branch.outputs.feature }} || \
+          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge \
           docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
+
+          # поехали!
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.feature }} up -d
-    # -
-    #   name: SSH Remote Commands
-    #   uses: appleboy/ssh-action@v0.1.4
-    #   with:
-    #     host: ${{ env.SSH_HOST }}
-    #     username: ${{ env.SSH_USER }}
-    #     key: ${{ env.SSH_KEY }}
-    #     script: |
-    #       cd ~/devops-test
-    #       git checkout dev          
-    #       git fetch
-    #       git pull
-    #       docker pull ${{ env.IMAGE_NAME }}:review
-    #       cd ./monday
-    #       docker-compose -f docker-compose.review.yaml up -d
