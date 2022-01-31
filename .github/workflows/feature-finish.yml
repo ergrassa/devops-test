@@ -6,6 +6,10 @@ on:
 jobs:
   shut-down-review:
     environment: staging
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
     name: Shut-Down-Review-Cleanup
     runs-on: ubuntu-latest
     steps:
@@ -21,9 +25,9 @@ jobs:
       name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_KEY: ${{ secrets.SSH_KEY }}
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USER }}
+        key: ${{ env.SSH_KEY }}
         script: |
           echo ${{ steps.extract_branch.outputs.feature }}
           cd ~/devops-test/monday/review
