@@ -6,7 +6,7 @@ on:
 jobs:
   shut-down-review:
     environment: staging
-    name: Shut-Down-Review
+    name: Shut-Down-Review-Cleanup
     runs-on: ubuntu-latest
     steps:
     - 
@@ -15,18 +15,20 @@ jobs:
       run: |
         echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
         echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
+        echo ${{ github.event.ref }}
+
       id: extract_branch
-    -
-      name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-        script: |
-          echo ${{ steps.extract_branch.outputs.feature }}
-          cd ~/devops-test/monday/review
-          echo REMOVED > ./${{ steps.extract_branch.outputs.feature }}/test
+    # -
+    #   name: executing remote ssh commands using password
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     SSH_HOST: ${{ secrets.SSH_HOST }}
+    #     SSH_USER: ${{ secrets.SSH_USER }}
+    #     SSH_KEY: ${{ secrets.SSH_KEY }}
+    #     script: |
+    #       echo ${{ steps.extract_branch.outputs.feature }}
+    #       cd ~/devops-test/monday/review
+    #       echo REMOVED > ./${{ steps.extract_branch.outputs.feature }}/test
 
 # docker-compose -f ./${{ steps.extract_branch.outputs.feature }}/docker-compose.review.yaml down --volumes --remove-orphans --rmi all
 # docker network disconnect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
