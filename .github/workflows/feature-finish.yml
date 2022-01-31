@@ -1,4 +1,4 @@
-name: Shut Down Review App
+name: shutdown RA and cleanup in feature
 on:
   delete:
    branches:

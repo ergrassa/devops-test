@@ -1,4 +1,4 @@
-name: Start Review App for Pull Request
+name: start/restart RA on push to feature
 on:
 #   pull_request:
 #     branches: [ dev ]
