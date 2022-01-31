@@ -32,7 +32,7 @@ jobs:
           echo TEST >> ./${{ steps.extract_branch.outputs.feature }}/test
 
           date
-# a comment
+
           ls -alh
 
 # docker-compose -f ./${{ steps.extract_branch.outputs.feature }}/docker-compose.review.yaml down --volumes --remove-orphans --rmi all
