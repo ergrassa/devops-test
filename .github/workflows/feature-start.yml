@@ -76,7 +76,7 @@ jobs:
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
           
           # если нет сетки, то создать и подключить к прокси, if-else вариант
-          if docker network inspect net-${{ steps.extract_branch.outputs.feature }}; then
+          if docker network inspect net-${{ steps.extract_branch.outputs.feature }} > /dev/null 2>&1; then
             echo "Network exists, doing nothing"
           else 
             echo "No network net-${{ steps.extract_branch.outputs.feature }}, creating and connecting to proxy"
