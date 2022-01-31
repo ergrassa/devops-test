@@ -1,9 +1,8 @@
 name: Shut Down Review App
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - dev
+  delete:
+   branches:
+    - feature/*
 jobs:
   shut-down-review:
     name: Shut-Down-Review
