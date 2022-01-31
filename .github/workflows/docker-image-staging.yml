@@ -3,6 +3,8 @@ name: Build and Update
 on:
   push:
     branches: [ dev ]
+    paths-ignore:
+    - ".github/workflows/**"
 #  pull_request:
 #    branches: [ dev ]
 env:
