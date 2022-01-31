@@ -75,11 +75,20 @@ jobs:
 
           docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.feature }}
           
-          # если нет сетки, то создать и подключить к прокси
-          # многострочник, пайп || выполняется, если первая команда завершена с ошибкой
-          docker network inspect net-${{ steps.extract_branch.outputs.feature }} || \
-          docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge && \
-          docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
+          # если нет сетки, то создать и подключить к прокси, if-else вариант
+          if docker network inspect net-${{ steps.extract_branch.outputs.feature }}; then
+            echo "Network exists, doing nothing"
+          else 
+            echo "No network net-${{ steps.extract_branch.outputs.feature }}, creating and connecting to proxy"
+            docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge
+            docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
+          fi
 
           # поехали!
           docker-compose -f docker-compose.review.yaml -p ${{ steps.extract_branch.outputs.feature }} up -d
+
+# # если нет сетки, то создать и подключить к прокси
+# # многострочник, пайп || выполняется, если первая команда завершена с ошибкой
+# docker network inspect net-${{ steps.extract_branch.outputs.feature }} || \
+# docker network create net-${{ steps.extract_branch.outputs.feature }} -d bridge && \
+# docker network connect net-${{ steps.extract_branch.outputs.feature }} nginx-proxy-ngp-1
