@@ -26,15 +26,18 @@ jobs:
   echo:
     needs: branchname
     runs-on: ubuntu-latest
+    env:
+      T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+      T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+      T_FILE: lms.review-template.yml # файл шаблона
+      FILE: lms.review.yml # компоуз-файл фичи
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
+      NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
+      PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
     steps:
     -
       name: echo
-      env:
-        T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
-        T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
-        FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
-        BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
-        NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name       
       shell: bash
       run: |
         echo ${{ env.T_FEATURE }}
@@ -42,3 +45,29 @@ jobs:
         echo ${{ env.FEATURE }}
         echo ${{ env.BRANCH }}
         echo ${{ env.NETNAME }}
+        cat << EOF
+        # создание папки и правка из шаблона
+        mkdir -p ~/deploy/${{ env.FEATURE }}
+        cd ~/deploy/${{ env.FEATURE }}
+        cp ~/${{ env.T_FILE }} ./${{ env.FILE }}
+        sed -i 's/{{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
+        sed -i 's/{{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
+
+        # докерхаб
+        docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+        docker pull centergamedev/lms-backend:${{ env.FEATURE }}
+        docker pull centergamedev/lms-frontend:${{ env.FEATURE }}
+        export TAG=${{ env.FEATURE }}
+
+        # если нет сетки, то создать и подключить к прокси, if-else вариант
+        if docker network inspect ${{ env.NETNAME }} > /dev/null 2>&1; then
+          echo "Network exists, doing nothing"
+        else 
+          echo "No network ${{ env.NETNAME }}, creating and connecting to proxy"
+          docker network create ${{ env.NETNAME }} -d bridge
+          docker network connect ${{ env.NETNAME }} ${{ env.PROXYNAME }}
+        fi
+
+        # поехали!
+        docker-compose -f ~/deploy/${{ env.FEATURE }}/${{ env.FILE }} -p ${{ env.FEATURE }} up -d
+        EOF
