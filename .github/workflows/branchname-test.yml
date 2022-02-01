@@ -9,6 +9,8 @@ on:
 jobs:
   branchname:
     runs-on: ubuntu-latest
+    outputs:
+      feature: ${{ steps.extract_branch.outputs.feature }}
     steps:
     - 
       name: Extract branch name
@@ -21,9 +23,10 @@ jobs:
       id: extract_branch
   echo:
     runs-on: ubuntu-latest
+    needs: branchname
     steps:
     -
       name: echo
       shell: bash
       run: |
-        echo ${{ steps.extract_branch.outputs.feature }}
+        echo ${{ needs.branchname.outputs.feature }}
