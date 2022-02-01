@@ -30,15 +30,17 @@ jobs:
     -
       name: echo
       env:
-        NET_PREFIX: lms # префикс сети
+        PREFIX: lms # префикс
         T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
         T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
         FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
         BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
+        NETNAME: ${{ env.PREFIX }}-${{ env.FEATURE }}
       shell: bash
       run: |
-        echo ${{ env.NET_PREFIX }}
+        echo ${{ env.PREFIX }}
         echo ${{ env.T_FEATURE }}
         echo ${{ env.T_BRANCH }}
         echo ${{ env.FEATURE }}
         echo ${{ env.BRANCH }}
+        echo ${{ env.NETNAME }}
