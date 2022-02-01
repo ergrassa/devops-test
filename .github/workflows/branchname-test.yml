@@ -37,8 +37,8 @@ jobs:
         BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
       shell: bash
       run: |
-        echo ${{ NET_PREFIX }}
+        echo ${{ env.NET_PREFIX }}
         echo ${{ env.T_FEATURE }}
-        echo ${{ T_BRANCH }}
+        echo ${{ env.T_BRANCH }}
         echo ${{ env.FEATURE }}
         echo ${{ env.BRANCH }}
