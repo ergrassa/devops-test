@@ -29,7 +29,16 @@ jobs:
     steps:
     -
       name: echo
+      env:
+        NET_PREFIX: lms # префикс сети
+        T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+        T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+        FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+        BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
       shell: bash
       run: |
-        echo ${{ needs.branchname.outputs.feature }}
-        echo ${{ needs.branchname.outputs.branch }}
+        echo ${{ NET_PREFIX }}
+        echo ${{ env.T_FEATURE }}
+        echo ${{ T_BRANCH }}
+        echo ${{ env.FEATURE }}
+        echo ${{ env.BRANCH }}
