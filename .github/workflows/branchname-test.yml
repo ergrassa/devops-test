@@ -53,8 +53,8 @@ jobs:
         mkdir -p ~/deploy/${{ env.FEATURE }}
         cd ~/deploy/${{ env.FEATURE }}
         cp ~/${{ env.T_FILE }} ./${{ env.FILE }}
-        sed -i 's/{{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
-        sed -i 's/{{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
+        sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
+        sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
 
         # докерхаб
         docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
