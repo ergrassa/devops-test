@@ -42,9 +42,12 @@ jobs:
       run: |
         echo ${{ env.T_FEATURE }}
         echo ${{ env.T_BRANCH }}
+        echo ${{ env.T_FILE }}
+        echo ${{ env.FILE }}
         echo ${{ env.FEATURE }}
         echo ${{ env.BRANCH }}
         echo ${{ env.NETNAME }}
+        echo ${{ env.PROXYNAME }}
         cat << EOF
         # создание папки и правка из шаблона
         mkdir -p ~/deploy/${{ env.FEATURE }}
