@@ -19,3 +19,11 @@ jobs:
         echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
         echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
       id: extract_branch
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: echo
+      shell: bash
+      run: |
+        echo ${{ steps.extract_branch.outputs.feature }}
