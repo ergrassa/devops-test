@@ -33,3 +33,5 @@ jobs:
       run: |
         echo ${{ needs.branchname.outputs.feature }}
         echo ${{ needs.branchname.outputs.branch }}
+        echo ${{ branchname.outputs.feature }}
+        echo ${{ branchname.outputs.branch }}
