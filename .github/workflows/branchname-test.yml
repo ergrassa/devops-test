@@ -22,8 +22,8 @@ jobs:
         echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
       id: extract_branch
   echo:
-    runs-on: ubuntu-latest
     needs: branchname
+    runs-on: ubuntu-latest
     steps:
     -
       name: echo
