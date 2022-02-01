@@ -8,7 +8,7 @@ on:
 
 jobs:
   branchname:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - 
       name: Extract branch name
