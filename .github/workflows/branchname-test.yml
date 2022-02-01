@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       feature: ${{ steps.extract_branch.outputs.feature }}
+      branch: ${{ steps.extract_branch.outputs.branch }}
     steps:
     - 
       name: Extract branch name
@@ -21,6 +22,7 @@ jobs:
         echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
         echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
       id: extract_branch
+      
   echo:
     needs: branchname
     runs-on: ubuntu-latest
@@ -30,3 +32,4 @@ jobs:
       shell: bash
       run: |
         echo ${{ needs.branchname.outputs.feature }}
+        echo ${{ needs.branchname.outputs.branch }}
