@@ -76,6 +76,7 @@ jobs:
 
 
   deploy:
+    needs: branchname
     environment: staging
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
