@@ -1,6 +1,7 @@
 name: Start Review App
 on:
   workflow_dispatch:
+
 jobs:
 
 # получает бранч нейм, эта джоба должна быть в needs
@@ -25,6 +26,7 @@ jobs:
 
 # деплой ↓↓↓
   deploy:
+    environment: staging
     name: Deploy
     needs: [branchname]
     runs-on: ubuntu-latest
