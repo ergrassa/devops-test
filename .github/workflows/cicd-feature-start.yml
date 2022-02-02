@@ -1,0 +1,224 @@
+name: Start Review App
+on:
+  workflow_dispatch:
+jobs:
+
+# получает бранч нейм, эта джоба должна быть в needs
+  branchname:
+    runs-on: ubuntu-latest
+    outputs:
+      feature: ${{ steps.extract_branch.outputs.feature }}
+      branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+    - 
+      name: Extract branch name
+      shell: bash
+      run: |
+        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        echo ${GITHUB_REF#refs/heads/}
+        echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
+        echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
+      id: extract_branch
+# call by
+# ${{ needs.branchname.outputs.feature }} for feature-branch or hotfix-fix or whatever
+# ${{ needs.branchname.outputs.branch }} for feature/name or support/helpme
+
+# линтинг ↓↓↓
+
+  backend-lint:
+    name: Backend-Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install libvips
+        run: sudo apt-get install -y software-properties-common && sudo add-apt-repository -y ppa:strukturag/libde265 && sudo add-apt-repository -y ppa:strukturag/libheif && sudo add-apt-repository -y ppa:tonimelisma/ppa && sudo apt install -y libvips-dev
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          working-directory: backend
+
+  frontend-lint:
+    name: Frontend-Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install NVM
+        run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+      - name: Install Node.js
+        env:
+          NODE_VERSION: 14.17.0
+        run: cd frontend && export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" --no-use && nvm install
+      - name: Install dependencies
+        run: cd frontend && npm install --force
+      - name: Lint source code with ESLint
+        run: cd frontend && npm run lint
+
+#
+# билды ↓↓↓
+#
+
+  backend-build:
+    name: Backend-Build
+    needs: [backend-lint, branchname]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      # - name: Extract tag name
+      #   shell: bash
+      #   run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF##*/})"
+      #   id: extract_tag
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile.staging
+          push: true
+          tags: centergamedev/lms-backend:${{ needs.branchname.outputs.feature }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+
+  frontend-build:
+    name: Frontend-Build
+    needs: [frontend-lint, branchname]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      # - name: Extract tag name
+      #   shell: bash
+      #   run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF##*/})"
+      #   id: extract_tag
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.staging
+          push: true
+          tags: centergamedev/lms-frontend:${{ needs.branchname.outputs.feature }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+# билды ↑↑↑
+#
+# деплой ↓↓↓
+deploy:
+    name: Deploy
+    needs: [branchname, backend-build, frontend-build]
+    runs-on: ubuntu-latest
+    env:
+      # переменные
+      T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+      T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+      T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
+      T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
+      T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
+      T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
+      TEMPLATE: lms.review-template.yml # файл шаблона
+      FILE: lms.review.yml # компоуз-файл фичи
+      NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
+      PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
+      VHOST_FRONTEND: frontend.foo.local
+      VHOST_BACKEND: backend.foo.local
+      # 
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
+
+
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup SSH
+      run: |
+        # создаем директорию для ключа
+        mkdir -p ~/.ssh
+        # выводим содержимое нашей переменной окружения в файл
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        # ставим нужные безопасные права
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/id_rsa
+        # Добавляем отпечаток сервера
+        echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+
+    # - name: Extract tag name
+    #   shell: bash
+    #   run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF##*/})"
+    #   id: extract_tag
+
+    # - name: copy file via ssh password
+    #   uses: appleboy/scp-action@master
+    #   with:
+    #     host: ${{ secrets.STAGING_HOST }}
+    #     username: ${{ secrets.STAGING_USERNAME }}
+    #     password: ${{ secrets.STAGING_PASSWORD }}
+    #     source: "${{ env.T_FILE }}"
+    #     target: "~/deploy/${{ needs.branchname.outputs.feature }}" 
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
+        password: ${{ secrets.STAGING_PASSWORD }}
+        script: |
+          # создание папки и правка из шаблона
+          mkdir -p ~/deploy/${{ env.FEATURE }}
+          cd ~/deploy/${{ env.FEATURE }}
+          cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
+          sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }}          
+
+          # докерхаб
+          docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker pull centergamedev/lms-backend:${{ env.FEATURE }}
+          docker pull centergamedev/lms-frontend:${{ env.FEATURE }}
+          export TAG=${{ env.FEATURE }}
+
+          # если нет сетки, то создать и подключить к прокси, if-else вариант
+          if docker network inspect ${{ env.NETNAME }} > /dev/null 2>&1; then
+            echo "Network exists, doing nothing"
+          else 
+            echo "No network ${{ env.NETNAME }}, creating and connecting to proxy"
+            docker network create ${{ env.NETNAME }} -d bridge
+            docker network connect ${{ env.NETNAME }} ${{ env.PROXYNAME }}
+          fi
+
+          # поехали!
+          docker-compose -f ~/deploy/${{ env.FEATURE }}/${{ env.FILE }} -p ${{ env.FEATURE }} up -d

@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  mongodb:
+    image: mongo:4.1.8-xenial
+    networks:
+      - _netname_
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=centergame
+      - MONGO_INITDB_ROOT_PASSWORD=KxrMYvgcJUCcRvmL5g5NBaZqxeQAgMkq
+    volumes:
+      - /data/db-_feature_
+    expose:
+      - "27017"
+  
+  mongo-express:
+    image: mongo-express
+    networks:
+      - _netname_
+    links: 
+      - "mongodb:_feature_-mongodb"
+    environment:
+        # - VIRTUAL_HOST=_feature_-db-explorer.79.143.29.77.nip.io
+        - ME_CONFIG_MONGODB_SERVER=_feature_-mongodb
+        - ME_CONFIG_MONGODB_PORT=27017
+        - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+        - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+        - ME_CONFIG_MONGODB_AUTH_USERNAME=admin
+        - ME_CONFIG_MONGODB_AUTH_PASSWORD=admin
+        - ME_CONFIG_BASICAUTH_USERNAME=admin
+        - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    depends_on:
+      - mongodb
+    ports:
+      - "8081"
+
+  backend:
+    image: centergamedev/lms-backend:_feature_
+    networks:
+      - _netname_
+    links: 
+      - "mongodb:_feature_-mongodb"
+    restart: 
+      unless-stopped
+    depends_on:
+      - mongodb
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=_feature_._backhost_
+      - PORT=80
+      - DATABASE_URL=mongodb://admin:admin@_feature_-mongodb:27017/?authSource=admin
+      - DB=lms
+      - JWT_SIGN=centergameaccess
+
+  frontend:
+    image: centergamedev/lms-frontend:_feature_
+    networks:
+      - _netname_
+    restart: 
+      unless-stopped
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=_feature_._fronthost_
+      - VUE_APP_BACKEND_HOST=http://_feature_._backhost_
+
+  fconverter:
+    image: gotenberg/gotenberg:7
+    networks:
+      - _netname_
+    command:
+      - "gotenberg"
+
+networks:
+  _netname_:
+    external: true
