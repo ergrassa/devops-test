@@ -66,12 +66,12 @@ jobs:
           mkdir -p ~/deploy/${{ env.FEATURE }}
           cd ~/deploy/${{ env.FEATURE }}
           cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
-          sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }} 
+          sed -i "s/${{ env.T_FEATURE }}/${{ env.FEATURE }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_BRANCH }}/${{ env.BRANCH }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_NETNAME }}/${{ env.NETNAME }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/" ./${{ env.FILE }}
         EOF
 
 
@@ -82,8 +82,6 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
-      env:
-      # переменные
       T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
       T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
       T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
@@ -115,9 +113,9 @@ jobs:
           mkdir -p ~/deploy/${{ env.FEATURE }}
           cd ~/deploy/${{ env.FEATURE }}
           cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
-          sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }} 
+          sed -i "s/${{ env.T_FEATURE }}/${{ env.FEATURE }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_BRANCH }}/${{ env.BRANCH }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_NETNAME }}/${{ env.NETNAME }}/" ./${{ env.FILE }}
+          sed -i "s/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/" ./${{ env.FILE }}
