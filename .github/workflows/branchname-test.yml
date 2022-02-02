@@ -5,23 +5,6 @@ name: Get branch name and test
 # Controls when the workflow will run
 on:
   workflow_dispatch:
-env:
-  # переменные
-  T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
-  T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
-  T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
-  T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
-  T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
-  T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
-  TEMPLATE: lms.review-template.yml # файл шаблона
-  FILE: lms.review.yml # компоуз-файл фичи
-  NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
-  PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
-  VHOST_FRONTEND: frontend.foo.local
-  VHOST_BACKEND: backend.foo.local
-  # 
-  FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
-  BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
 jobs:
   branchname:
     runs-on: ubuntu-latest
@@ -42,6 +25,23 @@ jobs:
   echo:
     needs: branchname
     runs-on: ubuntu-latest
+    env:
+      # переменные
+      T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+      T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+      T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
+      T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
+      T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
+      T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
+      TEMPLATE: lms.review-template.yml # файл шаблона
+      FILE: lms.review.yml # компоуз-файл фичи
+      NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
+      PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
+      VHOST_FRONTEND: frontend.foo.local
+      VHOST_BACKEND: backend.foo.local
+      # 
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
     steps:
     -
       name: echo
@@ -82,6 +82,23 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
+      env:
+      # переменные
+      T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+      T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+      T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
+      T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
+      T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
+      T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
+      TEMPLATE: lms.review-template.yml # файл шаблона
+      FILE: lms.review.yml # компоуз-файл фичи
+      NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
+      PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
+      VHOST_FRONTEND: frontend.foo.local
+      VHOST_BACKEND: backend.foo.local
+      # 
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
     runs-on: ubuntu-latest
     steps:
     -
