@@ -27,50 +27,60 @@ jobs:
     needs: branchname
     runs-on: ubuntu-latest
     env:
+      # переменные
       T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
       T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
-      T_FILE: lms.review-template.yml # файл шаблона
+      T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
+      T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
+      T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
+      T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
+      TEMPLATE: lms.review-template.yml # файл шаблона
       FILE: lms.review.yml # компоуз-файл фичи
-      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
-      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
       NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
       PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
+      VHOST_FRONTEND: frontend.foo.local
+      VHOST_BACKEND: backend.foo.local
+      # 
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
     steps:
     -
       name: echo
       shell: bash
       run: |
-        echo ${{ env.T_FEATURE }}
-        echo ${{ env.T_BRANCH }}
-        echo ${{ env.T_FILE }}
-        echo ${{ env.FILE }}
-        echo ${{ env.FEATURE }}
-        echo ${{ env.BRANCH }}
-        echo ${{ env.NETNAME }}
-        echo ${{ env.PROXYNAME }}
+        echo ${{ T_FEATURE }}
+        echo ${{ T_BRANCH }}
+        echo ${{ T_VHOST_FRONTEND }}
+        echo ${{ T_VHOST_BACKEND }}
+        echo ${{ T_NETNAME }}
+        echo ${{ T_PROXYNAME }}
+        echo ${{ TEMPLATE }}
+        echo ${{ FILE }}
+        echo ${{ NETNAME }}
+        echo ${{ PROXYNAME }}
+        echo ${{ VHOST_FRONTEND }}
+        echo ${{ VHOST_BACKEND }}
+        echo ${{ FEATURE }}
+        echo ${{ BRANCH }}
+
         cat << EOF
-        # создание папки и правка из шаблона
+          mkdir -p ~/deploy/${{ env.FEATURE }}
+          cd ~/deploy/${{ env.FEATURE }}
+          cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
+          sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
+          sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }} 
+        EOF
+
         mkdir -p ~/deploy/${{ env.FEATURE }}
         cd ~/deploy/${{ env.FEATURE }}
-        cp ~/${{ env.T_FILE }} ./${{ env.FILE }}
+        cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
         sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
         sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
-
-        # докерхаб
-        docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-        docker pull centergamedev/lms-backend:${{ env.FEATURE }}
-        docker pull centergamedev/lms-frontend:${{ env.FEATURE }}
-        export TAG=${{ env.FEATURE }}
-
-        # если нет сетки, то создать и подключить к прокси, if-else вариант
-        if docker network inspect ${{ env.NETNAME }} > /dev/null 2>&1; then
-          echo "Network exists, doing nothing"
-        else 
-          echo "No network ${{ env.NETNAME }}, creating and connecting to proxy"
-          docker network create ${{ env.NETNAME }} -d bridge
-          docker network connect ${{ env.NETNAME }} ${{ env.PROXYNAME }}
-        fi
-
-        # поехали!
-        docker-compose -f ~/deploy/${{ env.FEATURE }}/${{ env.FILE }} -p ${{ env.FEATURE }} up -d
-        EOF
+        sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
+        sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
+        sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
+        sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }} 
