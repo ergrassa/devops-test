@@ -66,12 +66,12 @@ jobs:
           mkdir -p ~/deploy/${{ env.FEATURE }}
           cd ~/deploy/${{ env.FEATURE }}
           cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
-          sed -i 's/${{ env.T_FEATURE }}/${{ env.FEATURE }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_BRANCH }}/${{ env.BRANCH }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_FRONTEND }}/${{ env.VHOST_FRONTEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_VHOST_BACKEND }}/${{ env.VHOST_BACKEND }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_NETNAME }}/${{ env.NETNAME }}/' ./${{ env.FILE }}
-          sed -i 's/${{ env.T_PROXYNAME }}/${{ env.PROXYNAME }}/' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_FEATURE }};${{ env.FEATURE }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_BRANCH }};${{ env.BRANCH }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_VHOST_FRONTEND }};${{ env.VHOST_FRONTEND }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_VHOST_BACKEND }};${{ env.VHOST_BACKEND }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_NETNAME }};${{ env.NETNAME }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_PROXYNAME }};${{ env.PROXYNAME }};' ./${{ env.FILE }}
         EOF
 
 
@@ -113,9 +113,9 @@ jobs:
           mkdir -p ~/deploy/${{ env.FEATURE }}
           cd ~/deploy/${{ env.FEATURE }}
           cp ~/${{ env.TEMPLATE }} ./${{ env.FILE }}
-          sed -i 's~${{ env.T_FEATURE }}~${{ env.FEATURE }}~' ./${{ env.FILE }}
-          sed -i 's~${{ env.T_BRANCH }}~${{ env.BRANCH }}~' ./${{ env.FILE }}
-          sed -i 's~${{ env.T_VHOST_FRONTEND }}~${{ env.VHOST_FRONTEND }}~' ./${{ env.FILE }}
-          sed -i 's~${{ env.T_VHOST_BACKEND }}~${{ env.VHOST_BACKEND }}~' ./${{ env.FILE }}
-          sed -i 's~${{ env.T_NETNAME }}~${{ env.NETNAME }}~' ./${{ env.FILE }}
-          sed -i 's~${{ env.T_PROXYNAME }}~${{ env.PROXYNAME }}~' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_FEATURE }};${{ env.FEATURE }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_BRANCH }};${{ env.BRANCH }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_VHOST_FRONTEND }};${{ env.VHOST_FRONTEND }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_VHOST_BACKEND }};${{ env.VHOST_BACKEND }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_NETNAME }};${{ env.NETNAME }};' ./${{ env.FILE }}
+          sed -i 's;${{ env.T_PROXYNAME }};${{ env.PROXYNAME }};' ./${{ env.FILE }}
