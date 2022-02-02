@@ -52,10 +52,11 @@ jobs:
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
       with:
-        host: ${{ secrets.STAGING_HOST }}
-        username: ${{ secrets.STAGING_USERNAME }}
-        password: ${{ secrets.STAGING_PASSWORD }}
         script: |
           # создание папки и правка из шаблона
           mkdir -p ~/deploy/${{ env.FEATURE }}
