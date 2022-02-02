@@ -48,20 +48,20 @@ jobs:
       name: echo
       shell: bash
       run: |
-        echo ${{ T_FEATURE }}
-        echo ${{ T_BRANCH }}
-        echo ${{ T_VHOST_FRONTEND }}
-        echo ${{ T_VHOST_BACKEND }}
-        echo ${{ T_NETNAME }}
-        echo ${{ T_PROXYNAME }}
-        echo ${{ TEMPLATE }}
-        echo ${{ FILE }}
-        echo ${{ NETNAME }}
-        echo ${{ PROXYNAME }}
-        echo ${{ VHOST_FRONTEND }}
-        echo ${{ VHOST_BACKEND }}
-        echo ${{ FEATURE }}
-        echo ${{ BRANCH }}
+        echo ${{ env.T_FEATURE }}
+        echo ${{ env.T_BRANCH }}
+        echo ${{ env.T_VHOST_FRONTEND }}
+        echo ${{ env.T_VHOST_BACKEND }}
+        echo ${{ env.T_NETNAME }}
+        echo ${{ env.T_PROXYNAME }}
+        echo ${{ env.TEMPLATE }}
+        echo ${{ env.FILE }}
+        echo ${{ env.NETNAME }}
+        echo ${{ env.PROXYNAME }}
+        echo ${{ env.VHOST_FRONTEND }}
+        echo ${{ env.VHOST_BACKEND }}
+        echo ${{ env.FEATURE }}
+        echo ${{ env.BRANCH }}
 
         cat << EOF
           mkdir -p ~/deploy/${{ env.FEATURE }}
