@@ -1,0 +1,82 @@
+name: Shut Review App
+on:
+  workflow_dispatch:
+  # delete:
+  #  branches:
+  #   - feature/*
+jobs:
+# получает бранч нейм, эта джоба должна быть в needs
+  branchname:
+    runs-on: ubuntu-latest
+    outputs:
+      feature: ${{ steps.extract_branch.outputs.feature }}
+      # branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+    - 
+      name: Extract branch name
+      shell: bash
+      run: |
+        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        echo ${GITHUB_REF#refs/heads/}
+        echo "##[set-output name=feature;]$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/')"
+        echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/'
+      id: extract_branch
+# call by
+# ${{ needs.branchname.outputs.feature }} for feature-branch or hotfix-fix or whatever
+# ${{ needs.branchname.outputs.branch }} for feature/name or support/helpme
+
+# финиш ↓↓↓
+  finish:
+    name: Deploy
+    needs: [branchname, backend-build, frontend-build]
+    runs-on: ubuntu-latest
+    env:
+      # переменные
+      T_FEATURE: _feature_ # строка поиска в шаблоне для замены на feature-name
+      # T_BRANCH: _branch_ # строка поиска в шаблоне для замены на feature/name
+      # T_VHOST_FRONTEND: _fronthost_ # строка поиска в шаблоне для замены на $VHOST_FRONTEND
+      # T_VHOST_BACKEND: _backhost_ # # строка поиска в шаблоне для замены на $VHOST_BACKEND
+      T_NETNAME: _netname_ # строка поиска в шаблоне для замены на $NETNAME
+      T_PROXYNAME: _proxy_ # строка поиска в шаблоне для замены на $PROXYNAME
+      # TEMPLATE: lms.review-template.yml # файл шаблона
+      FILE: lms.review.yml # компоуз-файл фичи
+      NETNAME: lms-${{ needs.branchname.outputs.feature }} # имя сети с feature-name
+      PROXYNAME: nginx-proxy-ngp-1 # имя контейнера с прокси
+      # VHOST_FRONTEND: frontend.local
+      # VHOST_BACKEND: backend.local
+      # 
+      FEATURE: ${{ needs.branchname.outputs.feature }} # feature-name
+      # BRANCH: ${{ needs.branchname.outputs.branch }} # feature/name
+
+    steps:
+    - name: Setup SSH    
+      uses: actions/checkout@v2
+      run: |
+        # создаем директорию для ключа
+        mkdir -p ~/.ssh
+        # выводим содержимое нашей переменной окружения в файл
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        # ставим нужные безопасные права
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/id_rsa
+        # Добавляем отпечаток сервера
+        echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEVOPS_TEST_SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.DEVOPS_TEST_SSH_KNOWN_HOSTS }}
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEVOPS_TEST_HOST }}
+        username: ${{ secrets.DEVOPS_TEST_USERNAME }}
+        password: ${{ secrets.DEVOPS_TEST_PASSWORD }}
+        script: |
+          echo ${{ steps.extract_branch.outputs.feature }}
+          cat << EOF
+            docker-compose -f ~/deploy/${{ env.FEATURE }}/${{ env.FILE }} down --volumes --remove-orphans --rmi all
+            docker network disconnect ${{ env.NETNAME }} ${{ env.PROXYNAME }}
+            docker network rm ${{ env.NETNAME }}
+            cd ~/deploy
+            rm -r ./${{ env.FEATURE }} -v
+          EOF
