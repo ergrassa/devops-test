@@ -1,9 +1,9 @@
 name: Shut Review App
 on:
-  workflow_dispatch:
-  # delete:
-  #  branches:
-  #   - feature/*
+#   workflow_dispatch:
+  delete:
+   branches:
+    - feature/*
 jobs:
 # получает бранч нейм, эта джоба должна быть в needs
   branchname:
